@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package main;
+
+option go_package = "./proto";
+
+import "google/api/annotations.proto";
+
+service TestApi{
+  rpc Encrypt(Crypt) returns (Crypt){
+    option (google.api.http) = {
+      post: "/api/encrypt"
+      body: "*"
+    };
+  }
+
+  rpc Decrypt(Crypt) returns (Crypt){
+    option (google.api.http) = {
+      post: "/api/decrypt"
+      body: "*"
+    };
+  }
+
+  rpc GetFiles(EmptyMessage) returns (FilesResponse){
+    option (google.api.http) = {
+      get: "/api/files"
+    };
+  }
+
+  rpc GetFileInfo(IdRequest) returns(File){
+    option (google.api.http) = {
+      get: "/api/files/{id}"
+    };
+  }
+
+  rpc UploadFile(UploadFileRequest) returns(EmptyMessage){
+    option (google.api.http) = {
+      post: "/api/files"
+      body: "*"
+    };
+  }
+
+  rpc UpdateFile(UpdateFileRequest) returns(EmptyMessage){
+    option (google.api.http) = {
+      put: "/api/files/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteFile(IdRequest) returns(EmptyMessage){
+    option (google.api.http) = {
+      delete: "/api/files/{id}"
+    };
+  }
+}
+
+message Crypt {
+  string msg = 1;
+
+}
+message EmptyMessage{
+
+}
+
+message IdRequest{
+  string id = 1;
+}
+
+message FilesResponse{
+  repeated File files = 1;
+}
+
+
+message File{
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+
+
+message UploadFileRequest{
+  string name = 1;
+  string description = 2;
+}
+
+message UpdateFileRequest{
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
